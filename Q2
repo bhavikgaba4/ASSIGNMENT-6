@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+
+// Node structure
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) {
+        data = val;
+        next = NULL;
+    }
+};
+
+// Circular Linked List class
+class CircularLinkedList {
+private:
+    Node* head;
+
+public:
+    CircularLinkedList() {
+        head = NULL;
+    }
+
+    // Insert at end
+    void insert(int val) {
+        Node* newNode = new Node(val);
+        if (head == NULL) {
+            head = newNode;
+            head->next = head; // point to itself
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != head)
+            temp = temp->next;
+
+        temp->next = newNode;
+        newNode->next = head; // make circular
+    }
+
+    // Display all nodes (repeat head value at end)
+    void display() {
+        if (head == NULL) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        Node* temp = head;
+        do {
+            cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != head);
+
+        cout << head->data << endl; // repeat head node value at end
+    }
+};
+
+// Main function
+int main() {
+    CircularLinkedList cll;
+
+    // Input: 20 → 100 → 40 → 80 → 60
+    cll.insert(20);
+    cll.insert(100);
+    cll.insert(40);
+    cll.insert(80);
+    cll.insert(60);
+
+    cout << "Output: ";
+    cll.display(); // Expected: 20 100 40 80 60 20
+
+    return 0;
+}
