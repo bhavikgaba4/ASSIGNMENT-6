@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+Node* head = NULL;
+
+void createList() {
+    Node* n1 = new Node{1, NULL, NULL};
+    Node* n2 = new Node{2, NULL, NULL};
+    Node* n3 = new Node{3, NULL, NULL};
+    Node* n4 = new Node{4, NULL, NULL};
+    Node* n5 = new Node{5, NULL, NULL};
+
+    n1->next = n2;
+    n2->prev = n1;
+    n2->next = n3;
+    n3->prev = n2;
+    n3->next = n4;
+    n4->prev = n3;
+    n4->next = n5;
+    n5->prev = n4;
+
+    head = n1;
+    n2->next = n5;
+}
+
+void printList() {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+void correctList() {
+    Node* temp = head;
+    while (temp != NULL && temp->next != NULL) {
+        if (temp->next->prev != temp) {
+            Node* randomNode = temp->next;
+            Node* correctNode = randomNode;
+            while (correctNode->prev != temp && correctNode->prev != NULL)
+                correctNode = correctNode->prev;
+            temp->next = correctNode;
+            correctNode->prev = temp;
+            break;
+        }
+        temp = temp->next;
+    }
+}
+
+int main() {
+    createList();
+    cout << "Before correction: ";
+    printList();
+    correctList();
+    cout << "After correction:  ";
+    printList();
+    return 0;
+}
