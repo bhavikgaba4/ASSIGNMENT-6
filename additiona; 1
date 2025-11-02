@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+// Function to split circular linked list
+void splitList(Node* head, Node** head1_ref, Node** head2_ref) {
+    Node *slow = head, *fast = head;
+
+    if (head == NULL)
+        return;
+
+    // Using slow and fast pointer to find mid
+    while (fast->next != head && fast->next->next != head) {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+
+    // For even number of nodes, move fast one more step
+    if (fast->next->next == head)
+        fast = fast->next;
+
+    // Set the heads of the two halves
+    *head1_ref = head;
+    if (head->next != head)
+        *head2_ref = slow->next;
+
+    // Make first half circular
+    fast->next = slow->next; // last node connects to 2nd half head
+    slow->next = head;       // middle connects back to first head
+}
+
+// Function to print circular linked list
+void printList(Node* head) {
+    if (head == NULL) return;
+    Node* temp = head;
+    do {
+        cout << temp->data << " ";
+        temp = temp->next;
+    } while (temp != head);
+    cout << endl;
+}
+
+// Utility function to create a new node
+Node* newNode(int data) {
+    Node* n = new Node;
+    n->data = data;
+    n->next = NULL;
+    return n;
+}
+
+int main() {
+    Node *head = newNode(1);
+    head->next = newNode(2);
+    head->next->next = newNode(3);
+    head->next->next->next = newNode(4);
+    head->next->next->next->next = newNode(5);
+    head->next->next->next->next->next = head; // make it circular
+
+    Node *head1 = NULL, *head2 = NULL;
+    splitList(head, &head1, &head2);
+
+    cout << "First Circular Linked List: ";
+    printList(head1);
+    cout << "Second Circular Linked List: ";
+    printList(head2);
+
+    return 0;
+}
